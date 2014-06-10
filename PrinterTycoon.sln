@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Printer", "Printer\Printer.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{726DE55C-CA8A-4079-8621-E089FD72AB8E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestServeur", "TestServeur\TestServeur.csproj", "{49C6B601-B8A9-40D4-A176-4E635080C94A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{726DE55C-CA8A-4079-8621-E089FD72AB8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{726DE55C-CA8A-4079-8621-E089FD72AB8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{726DE55C-CA8A-4079-8621-E089FD72AB8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49C6B601-B8A9-40D4-A176-4E635080C94A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49C6B601-B8A9-40D4-A176-4E635080C94A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49C6B601-B8A9-40D4-A176-4E635080C94A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49C6B601-B8A9-40D4-A176-4E635080C94A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
