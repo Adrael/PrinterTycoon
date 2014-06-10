@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Text;
 using System.Windows.Forms;
 using CommonConnection;
 
@@ -9,7 +10,7 @@ namespace ClientWindow
     {
         private TcpClient _clientSocket;
         private bool isPrinting = false;
-        private ModuleClient mc;
+        private ModuleClient _mc;
 
         public Form1()
         {
@@ -72,6 +73,20 @@ namespace ClientWindow
             addButton.Enabled = false;
             isPrinting = true;
             var job = new Job(42);
+
+            // send file name + file size as string
+
+            _mc.SendDataToServer(GetBytes("Ceci est un test"));
+        }
+
+        private byte[] GetBytes(string str)
+        {
+            return Encoding.ASCII.GetBytes(str);
+        }
+
+        private string GetString(byte[] bytes)
+        {
+            return Encoding.ASCII.GetString(bytes);
         }
 
         private void networkOptionsLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -80,14 +95,14 @@ namespace ClientWindow
             networkOptions.ShowDialog();
             if (networkOptions.IsValidConnection())
             {
-//                this._clientSocket = networkOptions.GetClientSocket();
-                this.mc = networkOptions.GetModuleClient();
+                this._mc = networkOptions.GetModuleClient();
             }
         }
 
         public byte[] ProcessDataFromServer(byte[] responseFromServer, int dataSize)
         {
-            throw new NotImplementedException();
+            Console.WriteLine(GetString(responseFromServer));
+            return responseFromServer;
         }
     }
 }
