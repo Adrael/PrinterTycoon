@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Text;
 using System.Windows.Forms;
 using CommonConnection;
 
@@ -75,22 +76,17 @@ namespace ClientWindow
 
             // send file name + file size as string
 
-//            Console.WriteLine(GetString(GetBytes("Ceci est un test")));
             _mc.SendDataToServer(GetBytes("Ceci est un test"));
         }
 
         private byte[] GetBytes(string str)
         {
-            byte[] bytes = new byte[str.Length * sizeof(char)];
-            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
-            return bytes;
+            return Encoding.ASCII.GetBytes(str);
         }
 
         private string GetString(byte[] bytes)
         {
-            char[] chars = new char[bytes.Length / sizeof(char)];
-            System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
-            return new string(chars);
+            return Encoding.ASCII.GetString(bytes);
         }
 
         private void networkOptionsLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -99,14 +95,14 @@ namespace ClientWindow
             networkOptions.ShowDialog();
             if (networkOptions.IsValidConnection())
             {
-//                this._clientSocket = networkOptions.GetClientSocket();
                 this._mc = networkOptions.GetModuleClient();
             }
         }
 
         public byte[] ProcessDataFromServer(byte[] responseFromServer, int dataSize)
         {
-            throw new NotImplementedException();
+            Console.WriteLine(GetString(responseFromServer));
+            return responseFromServer;
         }
     }
 }

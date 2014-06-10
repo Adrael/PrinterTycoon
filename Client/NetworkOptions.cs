@@ -32,23 +32,10 @@ namespace ClientWindow
             IPAddress ip;
             if (textBox1.Text != "" && IPAddress.TryParse(textBox1.Text, out ip))
             {
-                //valid ip
-//                _clientSocket = new TcpClient();
-
-//                try
-//                {
-//                    _clientSocket.Connect(ip, Convert.ToInt32(this.textBox3.Text));
-//                }
-//                catch (Exception exception)
-//                {
-//                    panel1.BackColor = Color.Red;
-//                    return;
-//                }
-
-                if (_mc.TryConnectWith(ip, Convert.ToInt32(this.textBox3.Text)))
+                if (_mc.TryConnectWith(ip, int.Parse(textBox3.Text)))
                 {
+                    panel1.BackColor = Color.Green;
                     _validConnection = true;
-                    Close();
                 }
                 else
                 {
@@ -72,11 +59,6 @@ namespace ClientWindow
         {
             return this._validConnection;
         }
-
-//        public TcpClient GetClientSocket()
-//        {
-//            return this._clientSocket;
-//        }
 
         public ModuleClient GetModuleClient()
         {
