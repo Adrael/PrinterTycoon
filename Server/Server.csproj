@@ -68,6 +68,16 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Client\Client.csproj">
+      <Project>{841B3487-D603-40D5-B573-35BB05F8ACA9}</Project>
+      <Name>Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonConnection\CommonConnection.csproj">
+      <Project>{661a29c9-9b77-430a-b30c-651f2320eb5a}</Project>
+      <Name>CommonConnection</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

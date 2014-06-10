@@ -17,16 +17,40 @@ namespace CommonConnection
 
         public bool TryConnectWith(IPAddress serverAddress, int serverPort)
         {
+//            _clientSocket = new TcpClient();
+//            try
+//            {
+//                _clientSocket.Connect(serverAddress, serverPort);
+//            }
+//            catch (Exception)
+//            {
+//                return false;
+//            }
+//            return _clientSocket.Connected;
+
             _clientSocket = new TcpClient();
+            IAsyncResult ar = _clientSocket.BeginConnect("127.0.0.1", 80, null, null);
+            System.Threading.WaitHandle wh = ar.AsyncWaitHandle;
             try
             {
-                _clientSocket.Connect(serverAddress, serverPort);
+                if (!ar.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(2), false))
+                {
+                    _clientSocket.Close();
+//                        throw new TimeoutException();
+                    return false;
+                }
+
+                _clientSocket.EndConnect(ar);
+                return true;
             }
             catch (Exception)
             {
                 return false;
             }
-            return _clientSocket.Connected;
+            finally
+            {
+                wh.Close();
+            }
         }
 
         public void SendDataToServer(byte[] dataToSend)
@@ -48,7 +72,7 @@ namespace CommonConnection
             _clientListener.ProcessDataFromServer(responseFromServer, bufferSize);
         }
 
-        public void StopConnexion()
+        public void StopConnection()
         {
             SendDataToServer(Encoding.ASCII.GetBytes("over"));
             _clientSocket.Close();

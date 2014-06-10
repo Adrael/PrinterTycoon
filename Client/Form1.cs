@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Net.Sockets;
 using System.Windows.Forms;
+using CommonConnection;
 
 namespace ClientWindow
 {
-    public partial class Form1 : Form
+    public partial class Form1 : Form, IClientListener
     {
         private TcpClient _clientSocket;
         private bool isPrinting = false;
+        private ModuleClient mc;
 
         public Form1()
         {
@@ -74,12 +76,18 @@ namespace ClientWindow
 
         private void networkOptionsLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            var networkOptions = new NetworkOptions();
+            var networkOptions = new NetworkOptions(this);
             networkOptions.ShowDialog();
             if (networkOptions.IsValidConnection())
             {
-                this._clientSocket = networkOptions.GetClientSocket();
+//                this._clientSocket = networkOptions.GetClientSocket();
+                this.mc = networkOptions.GetModuleClient();
             }
+        }
+
+        public byte[] ProcessDataFromServer(byte[] responseFromServer, int dataSize)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using System.Net;
 using System.Net.NetworkInformation;
+using CommonConnection;
 
 namespace ClientWindow
 {

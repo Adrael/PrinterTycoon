@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CommonConnection;
 
 namespace ClientWindow
 {
@@ -16,34 +17,44 @@ namespace ClientWindow
     {
         private TcpClient _clientSocket;
         private bool _validConnection = false;
+        private ModuleClient _mc;
 
-        public NetworkOptions()
+        public NetworkOptions(IClientListener icl)
         {
             InitializeComponent();
+            this._mc = new ModuleClient(icl);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            panel1.BackColor = Color.Green;
+            panel1.BackColor = Color.Orange;
 
             IPAddress ip;
             if (textBox1.Text != "" && IPAddress.TryParse(textBox1.Text, out ip))
             {
                 //valid ip
-                _clientSocket = new TcpClient();
+//                _clientSocket = new TcpClient();
 
-                try
+//                try
+//                {
+//                    _clientSocket.Connect(ip, Convert.ToInt32(this.textBox3.Text));
+//                }
+//                catch (Exception exception)
+//                {
+//                    panel1.BackColor = Color.Red;
+//                    return;
+//                }
+
+                if (_mc.TryConnectWith(ip, Convert.ToInt32(this.textBox3.Text)))
                 {
-                    _clientSocket.Connect(ip, Convert.ToInt32(this.textBox3.Text));
+                    _validConnection = true;
+                    Close();
                 }
-                catch (Exception exception)
+                else
                 {
                     panel1.BackColor = Color.Red;
-                    return;
                 }
 
-                _validConnection = true;
-                Close();
             }
             else
             {
@@ -62,9 +73,14 @@ namespace ClientWindow
             return this._validConnection;
         }
 
-        public TcpClient GetClientSocket()
+//        public TcpClient GetClientSocket()
+//        {
+//            return this._clientSocket;
+//        }
+
+        public ModuleClient GetModuleClient()
         {
-            return this._clientSocket;
+            return this._mc;
         }
     }
 }
