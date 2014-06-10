@@ -35,13 +35,13 @@
             this.columnHeaderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderProgression = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.printButton = new System.Windows.Forms.Button();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.networkOptionsLabel = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // addButton
             // 
             this.addButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addButton.Location = new System.Drawing.Point(340, 12);
+            this.addButton.Location = new System.Drawing.Point(381, 12);
             this.addButton.Name = "addButton";
             this.addButton.Size = new System.Drawing.Size(170, 35);
             this.addButton.TabIndex = 1;
@@ -53,7 +53,7 @@
             // 
             this.deleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.deleteButton.Enabled = false;
-            this.deleteButton.Location = new System.Drawing.Point(340, 53);
+            this.deleteButton.Location = new System.Drawing.Point(381, 53);
             this.deleteButton.Name = "deleteButton";
             this.deleteButton.Size = new System.Drawing.Size(170, 35);
             this.deleteButton.TabIndex = 2;
@@ -64,7 +64,7 @@
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(340, 449);
+            this.cancelButton.Location = new System.Drawing.Point(381, 449);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(170, 35);
             this.cancelButton.TabIndex = 5;
@@ -82,7 +82,7 @@
             this.columnHeaderProgression});
             this.filesList.Location = new System.Drawing.Point(12, 12);
             this.filesList.Name = "filesList";
-            this.filesList.Size = new System.Drawing.Size(319, 473);
+            this.filesList.Size = new System.Drawing.Size(350, 473);
             this.filesList.TabIndex = 4;
             this.filesList.UseCompatibleStateImageBehavior = false;
             this.filesList.View = System.Windows.Forms.View.Details;
@@ -102,7 +102,7 @@
             // 
             this.printButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.printButton.Enabled = false;
-            this.printButton.Location = new System.Drawing.Point(340, 94);
+            this.printButton.Location = new System.Drawing.Point(381, 94);
             this.printButton.Name = "printButton";
             this.printButton.Size = new System.Drawing.Size(170, 35);
             this.printButton.TabIndex = 3;
@@ -110,24 +110,24 @@
             this.printButton.UseVisualStyleBackColor = true;
             this.printButton.Click += new System.EventHandler(this.printButton_Click);
             // 
-            // linkLabel1
+            // networkOptionsLabel
             // 
-            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(341, 136);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(165, 17);
-            this.linkLabel1.TabIndex = 4;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Manage network settings";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.networkOptionsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.networkOptionsLabel.AutoSize = true;
+            this.networkOptionsLabel.Location = new System.Drawing.Point(382, 136);
+            this.networkOptionsLabel.Name = "networkOptionsLabel";
+            this.networkOptionsLabel.Size = new System.Drawing.Size(165, 17);
+            this.networkOptionsLabel.TabIndex = 4;
+            this.networkOptionsLabel.TabStop = true;
+            this.networkOptionsLabel.Text = "Manage network settings";
+            this.networkOptionsLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.networkOptionsLabel_LinkClicked);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(519, 497);
-            this.Controls.Add(this.linkLabel1);
+            this.ClientSize = new System.Drawing.Size(560, 497);
+            this.Controls.Add(this.networkOptionsLabel);
             this.Controls.Add(this.printButton);
             this.Controls.Add(this.filesList);
             this.Controls.Add(this.cancelButton);
@@ -148,7 +148,7 @@
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.ListView filesList;
         private System.Windows.Forms.Button printButton;
-        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.LinkLabel networkOptionsLabel;
         private System.Windows.Forms.ColumnHeader columnHeaderName;
         private System.Windows.Forms.ColumnHeader columnHeaderProgression;
     }

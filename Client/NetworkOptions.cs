@@ -25,34 +25,30 @@ namespace ClientWindow
         private void button2_Click(object sender, EventArgs e)
         {
             panel1.BackColor = Color.Green;
-            var ipAddressText = textBox1.Text;
-            if (ipAddressText.Length > 0)
+
+            IPAddress ip;
+            if (textBox1.Text != "" && IPAddress.TryParse(textBox1.Text, out ip))
             {
-//                IPAddress ip = IPAddress.Parse(ipAddressText);
+                //valid ip
+                _clientSocket = new TcpClient();
 
-                IPAddress ip;
-                if (IPAddress.TryParse(textBox1.Text, out ip))
+                try
                 {
-                    //valid ip
-                    _clientSocket = new TcpClient();
-
-                    try
-                    {
-                        _clientSocket.Connect(ip, Convert.ToInt32(this.textBox3.Text));
-                    }
-                    catch (Exception exception)
-                    {
-                        panel1.BackColor = Color.Red;
-                        return;
-                    }
-
-                    _validConnection = true;
-                    Close();
+                    _clientSocket.Connect(ip, Convert.ToInt32(this.textBox3.Text));
                 }
-                else
+                catch (Exception exception)
                 {
                     panel1.BackColor = Color.Red;
+                    return;
                 }
+
+                _validConnection = true;
+                Close();
+            }
+            else
+            {
+                Console.WriteLine("[Debug] Wrong IP address received: '" + textBox1.Text + "'");
+                panel1.BackColor = Color.Red;
             }
         }
 

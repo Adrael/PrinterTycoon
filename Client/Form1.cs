@@ -7,6 +7,7 @@ namespace ClientWindow
     public partial class Form1 : Form
     {
         private TcpClient _clientSocket;
+        private bool isPrinting = false;
 
         public Form1()
         {
@@ -33,6 +34,11 @@ namespace ClientWindow
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
+            if (isPrinting)
+            {
+                // 1 thread / file to cancel
+            }
+
             Close();
         }
 
@@ -59,10 +65,14 @@ namespace ClientWindow
 
         private void printButton_Click(object sender, EventArgs e)
         {
+            deleteButton.Enabled = false;
+            printButton.Enabled = false;
+            addButton.Enabled = false;
+            isPrinting = true;
             var job = new Job(42);
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void networkOptionsLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             var networkOptions = new NetworkOptions();
             networkOptions.ShowDialog();
