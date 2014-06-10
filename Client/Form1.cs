@@ -75,6 +75,7 @@ namespace ClientWindow
             var job = new Job(42);
 
             // send file name + file size as string
+            // action=print|info&name=size&name=size...
 
             _mc.SendDataToServer(GetBytes("Ceci est un test"));
         }
