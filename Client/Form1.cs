@@ -9,7 +9,7 @@ namespace ClientWindow
     {
         private TcpClient _clientSocket;
         private bool isPrinting = false;
-        private ModuleClient mc;
+        private ModuleClient _mc;
 
         public Form1()
         {
@@ -72,6 +72,25 @@ namespace ClientWindow
             addButton.Enabled = false;
             isPrinting = true;
             var job = new Job(42);
+
+            // send file name + file size as string
+
+//            Console.WriteLine(GetString(GetBytes("Ceci est un test")));
+            _mc.SendDataToServer(GetBytes("Ceci est un test"));
+        }
+
+        private byte[] GetBytes(string str)
+        {
+            byte[] bytes = new byte[str.Length * sizeof(char)];
+            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+            return bytes;
+        }
+
+        private string GetString(byte[] bytes)
+        {
+            char[] chars = new char[bytes.Length / sizeof(char)];
+            System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
+            return new string(chars);
         }
 
         private void networkOptionsLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -81,7 +100,7 @@ namespace ClientWindow
             if (networkOptions.IsValidConnection())
             {
 //                this._clientSocket = networkOptions.GetClientSocket();
-                this.mc = networkOptions.GetModuleClient();
+                this._mc = networkOptions.GetModuleClient();
             }
         }
 
