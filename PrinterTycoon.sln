@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{841B3487-D603-40D5-B573-35BB05F8ACA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonConnection", "CommonConnection\CommonConnection.csproj", "{661A29C9-9B77-430A-B30C-651F2320EB5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Printer", "Printer\Printer.csproj", "{206FB3DE-1CBC-461C-BD5D-9B1A79D41384}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{726DE55C-CA8A-4079-8621-E089FD72AB8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,18 @@ Global
 		{841B3487-D603-40D5-B573-35BB05F8ACA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{841B3487-D603-40D5-B573-35BB05F8ACA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{841B3487-D603-40D5-B573-35BB05F8ACA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{661A29C9-9B77-430A-B30C-651F2320EB5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{661A29C9-9B77-430A-B30C-651F2320EB5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{661A29C9-9B77-430A-B30C-651F2320EB5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{661A29C9-9B77-430A-B30C-651F2320EB5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{206FB3DE-1CBC-461C-BD5D-9B1A79D41384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{206FB3DE-1CBC-461C-BD5D-9B1A79D41384}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{206FB3DE-1CBC-461C-BD5D-9B1A79D41384}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{206FB3DE-1CBC-461C-BD5D-9B1A79D41384}.Release|Any CPU.Build.0 = Release|Any CPU
+		{726DE55C-CA8A-4079-8621-E089FD72AB8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{726DE55C-CA8A-4079-8621-E089FD72AB8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{726DE55C-CA8A-4079-8621-E089FD72AB8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{726DE55C-CA8A-4079-8621-E089FD72AB8E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
