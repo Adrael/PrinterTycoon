@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Net.Sockets;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using CommonConnection;
@@ -8,26 +8,36 @@ namespace ClientWindow
 {
     public partial class Form1 : Form, IClientListener
     {
-        private TcpClient _clientSocket;
-        private bool isPrinting = false;
+        private bool _isPrinting = false;
+        private ColumnHeader columnHeaderSize;
         private ModuleClient _mc;
 
         public Form1()
         {
             InitializeComponent();
         }
-
+        
         private void addButton_Click(object sender, EventArgs e)
         {
             var dialog = new OpenFileDialog {Multiselect = true};
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                if (dialog.FileName != "")
+                if (dialog.FileName != null)
                 {
+                    var array = new String[3];
                     foreach (var name in dialog.FileNames)
                     {
-                        filesList.Items.Add(System.IO.Path.GetFileName(name));
+                        var infos = new FileInfo(name);
+                        var fileName = infos.Name;
+                        var fileSize = infos.Length / 1024;
+
+                        array[0] = fileName;
+                        array[1] = fileSize.ToString();
+                        array[2] = "0 %";
+
+                        var item = new ListViewItem(array);
+                        filesList.Items.Add(item);
                     }
 
                     printButton.Enabled = true;
@@ -37,7 +47,7 @@ namespace ClientWindow
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
-            if (isPrinting)
+            if (_isPrinting)
             {
                 // 1 thread / file to cancel
             }
@@ -71,13 +81,18 @@ namespace ClientWindow
             deleteButton.Enabled = false;
             printButton.Enabled = false;
             addButton.Enabled = false;
-            isPrinting = true;
+            _isPrinting = true;
             var job = new Job(42);
 
             // send file name + file size as string
             // action=print|info&name=size&name=size...
+            var random = new Random();
+            var filesAndSize = "action=print&";
+            foreach (ListViewItem item in filesList.Items)
+                filesAndSize += item.SubItems[0].Text + "=" + item.SubItems[1].Text + "&";
 
-            _mc.SendDataToServer(GetBytes("Ceci est un test"));
+            //Console.WriteLine(filesAndSize);
+            _mc.SendDataToServer(GetBytes(filesAndSize));
         }
 
         private byte[] GetBytes(string str)
@@ -103,7 +118,155 @@ namespace ClientWindow
         public byte[] ProcessDataFromServer(byte[] responseFromServer, int dataSize)
         {
             Console.WriteLine(GetString(responseFromServer));
+            var response = GetString(responseFromServer);
+
+
             return responseFromServer;
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private System.Windows.Forms.Button addButton;
+        private System.Windows.Forms.Button deleteButton;
+        private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.ListView filesList;
+        private System.Windows.Forms.Button printButton;
+        private System.Windows.Forms.LinkLabel networkOptionsLabel;
+        private System.Windows.Forms.ColumnHeader columnHeaderName;
+        private System.Windows.Forms.ColumnHeader columnHeaderProgression;
+
+        private void InitializeComponent()
+        {
+            this.addButton = new System.Windows.Forms.Button();
+            this.deleteButton = new System.Windows.Forms.Button();
+            this.cancelButton = new System.Windows.Forms.Button();
+            this.filesList = new System.Windows.Forms.ListView();
+            this.columnHeaderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderProgression = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.printButton = new System.Windows.Forms.Button();
+            this.networkOptionsLabel = new System.Windows.Forms.LinkLabel();
+            this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SuspendLayout();
+            // 
+            // addButton
+            // 
+            this.addButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.addButton.Location = new System.Drawing.Point(441, 10);
+            this.addButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.addButton.Name = "addButton";
+            this.addButton.Size = new System.Drawing.Size(128, 28);
+            this.addButton.TabIndex = 1;
+            this.addButton.Text = "Ajouter";
+            this.addButton.UseVisualStyleBackColor = true;
+            this.addButton.Click += new System.EventHandler(this.addButton_Click);
+            // 
+            // deleteButton
+            // 
+            this.deleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.deleteButton.Enabled = false;
+            this.deleteButton.Location = new System.Drawing.Point(441, 43);
+            this.deleteButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.deleteButton.Name = "deleteButton";
+            this.deleteButton.Size = new System.Drawing.Size(128, 28);
+            this.deleteButton.TabIndex = 2;
+            this.deleteButton.Text = "Supprimer";
+            this.deleteButton.UseVisualStyleBackColor = true;
+            this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
+            // 
+            // cancelButton
+            // 
+            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cancelButton.Location = new System.Drawing.Point(441, 425);
+            this.cancelButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(128, 28);
+            this.cancelButton.TabIndex = 5;
+            this.cancelButton.Text = "Annuler";
+            this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+            // 
+            // filesList
+            // 
+            this.filesList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.filesList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderName,
+            this.columnHeaderSize,
+            this.columnHeaderProgression});
+            this.filesList.Location = new System.Drawing.Point(9, 10);
+            this.filesList.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.filesList.Name = "filesList";
+            this.filesList.Size = new System.Drawing.Size(419, 445);
+            this.filesList.TabIndex = 4;
+            this.filesList.UseCompatibleStateImageBehavior = false;
+            this.filesList.View = System.Windows.Forms.View.Details;
+            this.filesList.SelectedIndexChanged += new System.EventHandler(this.filesList_SelectedIndexChanged);
+            // 
+            // columnHeaderName
+            // 
+            this.columnHeaderName.Text = "Name";
+            this.columnHeaderName.Width = 182;
+            // 
+            // columnHeaderProgression
+            // 
+            this.columnHeaderProgression.Text = "Progression";
+            this.columnHeaderProgression.Width = 133;
+            // 
+            // printButton
+            // 
+            this.printButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.printButton.Enabled = false;
+            this.printButton.Location = new System.Drawing.Point(441, 76);
+            this.printButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.printButton.Name = "printButton";
+            this.printButton.Size = new System.Drawing.Size(128, 28);
+            this.printButton.TabIndex = 3;
+            this.printButton.Text = "Imprimer";
+            this.printButton.UseVisualStyleBackColor = true;
+            this.printButton.Click += new System.EventHandler(this.printButton_Click);
+            // 
+            // networkOptionsLabel
+            // 
+            this.networkOptionsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.networkOptionsLabel.AutoSize = true;
+            this.networkOptionsLabel.Location = new System.Drawing.Point(441, 110);
+            this.networkOptionsLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.networkOptionsLabel.Name = "networkOptionsLabel";
+            this.networkOptionsLabel.Size = new System.Drawing.Size(126, 13);
+            this.networkOptionsLabel.TabIndex = 4;
+            this.networkOptionsLabel.TabStop = true;
+            this.networkOptionsLabel.Text = "Manage network settings";
+            this.networkOptionsLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.networkOptionsLabel_LinkClicked);
+            // 
+            // columnHeaderSize
+            // 
+            this.columnHeaderSize.Text = "Size (Ko)";
+            this.columnHeaderSize.Width = 100;
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(575, 471);
+            this.Controls.Add(this.networkOptionsLabel);
+            this.Controls.Add(this.printButton);
+            this.Controls.Add(this.filesList);
+            this.Controls.Add(this.cancelButton);
+            this.Controls.Add(this.deleteButton);
+            this.Controls.Add(this.addButton);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MinimumSize = new System.Drawing.Size(407, 449);
+            this.Name = "Form1";
+            this.Text = "PrinterTycoon Client";
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        
     }
 }
