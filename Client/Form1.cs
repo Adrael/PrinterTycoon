@@ -30,6 +30,8 @@ namespace ClientWindow
             progressTimer.Elapsed += progressTimedEvent;
             progressTimer.Enabled = true;
 
+            addButton.Enabled = false;
+
             threads = new List<Thread>();
         }
 
@@ -37,10 +39,7 @@ namespace ClientWindow
         {
             if (_isPrinting)
             {
-                Console.WriteLine("Requesting progression: {0}", e.SignalTime);
-                var thread = new Thread(progressPrint) {Name = "progressPrintThread"};
-                threads.Add(thread);
-                thread.Start();
+                createThread("progressPrintThread", progressPrint);
             }
         }
         
@@ -76,9 +75,7 @@ namespace ClientWindow
         {
             if (_isPrinting)
             {
-                var thread = new Thread(cancelPrint) { Name = "cancelPrintThread" };
-                threads.Add(thread);
-                thread.Start();
+                createThread("cancelPrintThread", cancelPrint);
             }
 
             closeAllThreads();
@@ -134,43 +131,31 @@ namespace ClientWindow
 
         private void progressPrinting()
         {
-            var files = "action=progress&";
-
-            foreach (ListViewItem item in filesList.Items)
-            {
-                files += item.SubItems[0].Text + "=" + "ID" + "&";
-            }
-
-            _mc.SendDataToServer(GetBytes(files));
+            processAction("progress", false);
         }
 
         private void cancelPrinting()
         {
-            var files = "action=cancel&";
+            processAction("cancel", false);
+        }
+
+        private void processAction(String action, bool byIDOrSize)
+        {
+            var files = "action=" + action + "&";
 
             foreach (ListViewItem item in filesList.Items)
             {
-                files += item.SubItems[0].Text + "=" + "ID" + "&";
+                files += item.SubItems[0].Text + "=" + (byIDOrSize ? "ID" : item.SubItems[1].Text) + "&";
             }
+
+            Console.WriteLine("Send for " + action + ": " + files);
 
             _mc.SendDataToServer(GetBytes(files));
         }
 
         private void launchPrint()
         {
-            // send file name + file size as string
-            // action=print|info&name=size&name=size...
-
-            var filesAndSize = "action=print&";
-
-            foreach (ListViewItem item in filesList.Items)
-            {
-                filesAndSize += item.SubItems[0].Text + "=" + item.SubItems[1].Text + "&";
-            }
-
-            Console.WriteLine("Send: " + filesAndSize);
-
-            _mc.SendDataToServer(GetBytes(filesAndSize));
+            processAction("print", false);
         }
 
         private void printButton_Click(object sender, EventArgs e)
@@ -179,9 +164,14 @@ namespace ClientWindow
             printButton.Enabled = false;
             addButton.Enabled = false;
             _isPrinting = true;
-            //var job = new Job(42);
 
-            var thread = new Thread(startPrint) {Name = "startPrintThread"};
+            createThread("startPrintThread", startPrint);
+        }
+
+        private void createThread(String name, ThreadStart function)
+        {
+            Console.WriteLine("Creating thread " + name);
+            var thread = new Thread(function) { Name = name };
             threads.Add(thread);
             thread.Start();
         }
@@ -203,6 +193,7 @@ namespace ClientWindow
             if (networkOptions.IsValidConnection())
             {
                 this._mc = networkOptions.GetModuleClient();
+                addButton.Enabled = true;
             }
         }
 
