@@ -13,8 +13,8 @@ namespace ClientWindow
     {
         private bool _isPrinting = false;
         private ColumnHeader columnHeaderSize;
-        private TextBox textBox1;
         private ModuleClient _mc;
+        private ColumnHeader columnHeaderId;
 
         private List<Thread> threads;
 
@@ -145,7 +145,7 @@ namespace ClientWindow
 
             foreach (ListViewItem item in filesList.Items)
             {
-                files += item.SubItems[0].Text + "=" + (byIDOrSize ? "ID" : item.SubItems[1].Text) + "&";
+                files += item.SubItems[0].Text + "=" + (byIDOrSize ? item.SubItems[3].Text : item.SubItems[1].Text) + "&";
             }
 
             Console.WriteLine("Send for " + action + ": " + files);
@@ -202,25 +202,59 @@ namespace ClientWindow
             var response = GetString(responseFromServer);
             Console.WriteLine("Response from server: " + response);
 
-            textBox1.Text = response;
-
             var split = response.Split('&');
-            Console.WriteLine("First split: " + split[0]);
+            var action = split[0].Split('=')[1];
 
-            // action=print
-            // receive name=id&name=id&...
-            // affect id to file
+            for (var i = 1; i < split.Length; ++i)
+            {
+                var value = split[i].Split('=');
+
+                foreach (ListViewItem item in filesList.Items)
+                {
+                    if (action == "progress")
+                    {
+                        if (setUpProgression(item, value[0], value[1]))
+                        {
+                            break;
+                        }
+                    }
+
+                    else if (action == "print")
+                    {
+                        if (setUpId(item, value[0], value[1]))
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private bool setUpId(ListViewItem item, String name, String value)
         {
-            Console.WriteLine("closing");
-            closeAllThreads();
+            if (item.SubItems[0].Text == name && item.SubItems[3].Text == "")
+            {
+                item.SubItems[3].Text = value;
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool setUpProgression(ListViewItem item, String id, String value)
+        {
+            if (item.SubItems[3].Text == id)
+            {
+                item.SubItems[2].Text = value;
+                return true;
+            }
+
+            return false;
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Console.WriteLine("closed");
             closeAllThreads();
         }
 
@@ -244,7 +278,7 @@ namespace ClientWindow
             this.columnHeaderProgression = new System.Windows.Forms.ColumnHeader();
             this.printButton = new System.Windows.Forms.Button();
             this.networkOptionsLabel = new System.Windows.Forms.LinkLabel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.columnHeaderId = new System.Windows.Forms.ColumnHeader();
             this.SuspendLayout();
             // 
             // addButton
@@ -292,7 +326,8 @@ namespace ClientWindow
             this.filesList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderName,
             this.columnHeaderSize,
-            this.columnHeaderProgression});
+            this.columnHeaderProgression,
+            this.columnHeaderId});
             this.filesList.Location = new System.Drawing.Point(9, 10);
             this.filesList.Margin = new System.Windows.Forms.Padding(2);
             this.filesList.Name = "filesList";
@@ -310,12 +345,12 @@ namespace ClientWindow
             // columnHeaderSize
             // 
             this.columnHeaderSize.Text = "Size (Ko)";
-            this.columnHeaderSize.Width = 100;
+            this.columnHeaderSize.Width = 83;
             // 
             // columnHeaderProgression
             // 
             this.columnHeaderProgression.Text = "Progression";
-            this.columnHeaderProgression.Width = 133;
+            this.columnHeaderProgression.Width = 87;
             // 
             // printButton
             // 
@@ -343,20 +378,15 @@ namespace ClientWindow
             this.networkOptionsLabel.Text = "Manage network settings";
             this.networkOptionsLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.networkOptionsLabel_LinkClicked);
             // 
-            // textBox1
+            // columnHeaderId
             // 
-            this.textBox1.Location = new System.Drawing.Point(444, 126);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(119, 294);
-            this.textBox1.TabIndex = 6;
+            this.columnHeaderId.Text = "#";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(575, 471);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.networkOptionsLabel);
             this.Controls.Add(this.printButton);
             this.Controls.Add(this.filesList);
@@ -367,7 +397,6 @@ namespace ClientWindow
             this.MinimumSize = new System.Drawing.Size(407, 449);
             this.Name = "Form1";
             this.Text = "PrinterTycoon Client";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
