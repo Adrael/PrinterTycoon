@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using CommonConnection;
 
@@ -11,6 +12,8 @@ namespace ClientWindow
         private bool _isPrinting = false;
         private ColumnHeader columnHeaderSize;
         private ModuleClient _mc;
+
+        private delegate void launchPrintDelegate();
 
         public Form1()
         {
@@ -76,23 +79,36 @@ namespace ClientWindow
             deleteButton.Enabled = false;
         }
 
+        private void startPrint()
+        {
+            Invoke((launchPrintDelegate) launchPrint);
+        }
+
+        private void launchPrint()
+        {
+            // send file name + file size as string
+            // action=print|info&name=size&name=size...
+
+            var filesAndSize = "action=print&";
+
+            foreach (ListViewItem item in filesList.Items)
+            {
+                filesAndSize += item.SubItems[0].Text + "=" + item.SubItems[1].Text + "&";
+            }
+
+            _mc.SendDataToServer(GetBytes(filesAndSize));
+        }
+
         private void printButton_Click(object sender, EventArgs e)
         {
             deleteButton.Enabled = false;
             printButton.Enabled = false;
             addButton.Enabled = false;
             _isPrinting = true;
-            var job = new Job(42);
+            //var job = new Job(42);
 
-            // send file name + file size as string
-            // action=print|info&name=size&name=size...
-            var random = new Random();
-            var filesAndSize = "action=print&";
-            foreach (ListViewItem item in filesList.Items)
-                filesAndSize += item.SubItems[0].Text + "=" + item.SubItems[1].Text + "&";
-
-            //Console.WriteLine(filesAndSize);
-            _mc.SendDataToServer(GetBytes(filesAndSize));
+            launchPrintDelegate del = launchPrint;
+            new Thread(startPrint).Start();
         }
 
         private byte[] GetBytes(string str)
@@ -115,13 +131,10 @@ namespace ClientWindow
             }
         }
 
-        public byte[] ProcessDataFromServer(byte[] responseFromServer, int dataSize)
+        public void ProcessDataFromServer(byte[] responseFromServer, int dataSize)
         {
-            Console.WriteLine(GetString(responseFromServer));
             var response = GetString(responseFromServer);
-
-
-            return responseFromServer;
+            Console.WriteLine("Response from server: " + response);
         }
 
         private void Form1_Load(object sender, EventArgs e)
