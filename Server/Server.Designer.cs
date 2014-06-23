@@ -60,7 +60,7 @@ namespace Server
             this.label3 = new System.Windows.Forms.Label();
             this.indicateurClient = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
+            this.labelAdresse = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -395,21 +395,22 @@ namespace Server
             this.label4.TabIndex = 2;
             this.label4.Text = "Adresse du serveur :";
             // 
-            // label11
+            // labelAdresse
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(119, 9);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(64, 13);
-            this.label11.TabIndex = 4;
-            this.label11.Text = "192.168.0.1";
+            this.labelAdresse.AutoSize = true;
+            this.labelAdresse.Location = new System.Drawing.Point(119, 9);
+            this.labelAdresse.Name = "labelAdresse";
+            this.labelAdresse.Size = new System.Drawing.Size(64, 13);
+            this.labelAdresse.TabIndex = 4;
+            this.labelAdresse.Text = "192.168.0.1";
+            this.labelAdresse.Click += new System.EventHandler(this.label11_Click);
             // 
             // Server
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(254, 362);
-            this.Controls.Add(this.label11);
+            this.Controls.Add(this.labelAdresse);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.groupBox3);
@@ -471,6 +472,6 @@ namespace Server
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label labelPortImprimante;
         private System.Windows.Forms.Label labelPortClient;
-        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label labelAdresse;
     }
 }

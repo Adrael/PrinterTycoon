@@ -17,7 +17,10 @@ namespace Server
         public Server()
         {
             InitializeComponent();
-            _adresse = IPAddress.Parse("192.168.1.12");
+
+            IPAddress[] a = Dns.GetHostByName(Dns.GetHostName()).AddressList;
+            _adresse = a[0];
+            labelAdresse.Text = _adresse.ToString();
             _interfaceClients = new ModuleServeur(this);
             _interfaceImprimante = new ModuleServeur(this);
         }
@@ -111,6 +114,11 @@ namespace Server
             // if (_interfaceImprimante.isRunning())
             //    _interfaceImprimante.StopModule();
 
+
+        }
+
+        private void label11_Click(object sender, EventArgs e)
+        {
 
         }
     }
