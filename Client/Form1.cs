@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Timers;
 using System.Windows.Forms;
 using CommonConnection;
 
@@ -14,10 +15,26 @@ namespace ClientWindow
         private ModuleClient _mc;
 
         private delegate void launchPrintDelegate();
+        private delegate void cancelPrintDelegate();
+        private delegate void progressPrintDelegate();
 
         public Form1()
         {
             InitializeComponent();
+
+            var progressTimer = new System.Timers.Timer(1000);
+            progressTimer.Elapsed += progressTimedEvent;
+            progressTimer.Enabled = true;
+        }
+
+        private void progressTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            if (_isPrinting)
+            {
+                Console.WriteLine("Requesting progression: {0}", e.SignalTime);
+                var thread = new Thread(progressPrint) { Name = "progressPrintThread" };
+                thread.Start();
+            }
         }
         
         private void addButton_Click(object sender, EventArgs e)
@@ -52,7 +69,8 @@ namespace ClientWindow
         {
             if (_isPrinting)
             {
-                // 1 thread / file to cancel
+                var thread = new Thread(cancelPrint) { Name = "cancelPrintThread" };
+                thread.Start();
             }
 
             Close();
@@ -84,6 +102,40 @@ namespace ClientWindow
             Invoke((launchPrintDelegate) launchPrint);
         }
 
+        private void cancelPrint()
+        {
+            Invoke((cancelPrintDelegate) cancelPrinting);
+        }
+
+        private void progressPrint()
+        {
+            Invoke((progressPrintDelegate) progressPrinting);
+        }
+
+        private void progressPrinting()
+        {
+            var files = "action=progress&";
+
+            foreach (ListViewItem item in filesList.Items)
+            {
+                files += item.SubItems[0].Text + "=" + "ID" + "&";
+            }
+
+            _mc.SendDataToServer(GetBytes(files));
+        }
+
+        private void cancelPrinting()
+        {
+            var files = "action=cancel&";
+
+            foreach (ListViewItem item in filesList.Items)
+            {
+                files += item.SubItems[0].Text + "=" + "ID" + "&";
+            }
+
+            _mc.SendDataToServer(GetBytes(files));
+        }
+
         private void launchPrint()
         {
             // send file name + file size as string
@@ -96,6 +148,8 @@ namespace ClientWindow
                 filesAndSize += item.SubItems[0].Text + "=" + item.SubItems[1].Text + "&";
             }
 
+            Console.WriteLine("Send: " + filesAndSize);
+
             _mc.SendDataToServer(GetBytes(filesAndSize));
         }
 
@@ -107,8 +161,8 @@ namespace ClientWindow
             _isPrinting = true;
             //var job = new Job(42);
 
-            launchPrintDelegate del = launchPrint;
-            new Thread(startPrint).Start();
+            var thread = new Thread(startPrint) {Name = "startPrintThread"};
+            thread.Start();
         }
 
         private byte[] GetBytes(string str)
@@ -135,6 +189,13 @@ namespace ClientWindow
         {
             var response = GetString(responseFromServer);
             Console.WriteLine("Response from server: " + response);
+
+            var split = response.Split('&');
+            Console.WriteLine("First split: " + split[0]);
+
+            // action=print
+            // receive name=id&name=id&...
+            // affect id to file
         }
 
         private void Form1_Load(object sender, EventArgs e)
