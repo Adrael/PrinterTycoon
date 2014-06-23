@@ -18,7 +18,7 @@ namespace TestServeur
         private void button1_Click(object sender, EventArgs e)
         {
             moduleServeur = new ModuleServeur(this);
-            moduleServeur.StartServer(IPAddress.Parse("192.168.0.18"), 8888);
+            moduleServeur.StartServer(IPAddress.Parse("192.168.1.12"), 8888);
 
         }
 

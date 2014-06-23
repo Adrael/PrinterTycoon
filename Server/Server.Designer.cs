@@ -125,7 +125,7 @@ namespace Server
             this.listBox2.FormattingEnabled = true;
             this.listBox2.Location = new System.Drawing.Point(7, 20);
             this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(235, 82);
+            this.listBox2.Size = new System.Drawing.Size(209, 82);
             this.listBox2.TabIndex = 5;
             // 
             // textBox4
@@ -136,7 +136,7 @@ namespace Server
             this.textBox4.Location = new System.Drawing.Point(7, 121);
             this.textBox4.Multiline = true;
             this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(235, 90);
+            this.textBox4.Size = new System.Drawing.Size(209, 90);
             this.textBox4.TabIndex = 4;
             // 
             // tabPage3
@@ -178,7 +178,7 @@ namespace Server
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(7, 20);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(219, 82);
+            this.listBox1.Size = new System.Drawing.Size(209, 82);
             this.listBox1.TabIndex = 1;
             // 
             // textBox3
@@ -189,7 +189,7 @@ namespace Server
             this.textBox3.Location = new System.Drawing.Point(7, 121);
             this.textBox3.Multiline = true;
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(219, 86);
+            this.textBox3.Size = new System.Drawing.Size(209, 86);
             this.textBox3.TabIndex = 0;
             // 
             // tabPage1
@@ -418,6 +418,7 @@ namespace Server
             this.MinimumSize = new System.Drawing.Size(270, 400);
             this.Name = "Server";
             this.Text = "Printer Tycoon";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Server_FormClosed);
             this.Load += new System.EventHandler(this.Server_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);

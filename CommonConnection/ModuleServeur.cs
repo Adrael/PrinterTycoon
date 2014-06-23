@@ -12,13 +12,17 @@ namespace CommonConnection
         private TcpListener _serverSocket;
         private IServerListener _moduleLister;
         private bool _running;
-        private List<Thread> _listOfThread;
+        private List<Thread> _listOfClientsThread;
         private int _counter;
+        private bool _waitingForClient;
+
         private delegate void MessageSender(IServerListener listener, string message);
 
         public ModuleServeur(IServerListener listener)
         {
             _moduleLister = listener;
+            _listOfClientsThread = new List<Thread>();
+            _waitingForClient = false;
             _running = false;
             _counter = 0;
         }
@@ -27,13 +31,10 @@ namespace CommonConnection
         {
             if (_serverSocket != null)
                 _serverSocket.Stop();
-
-            // _listOfThread = new List<Thread>();
-
             _serverSocket = new TcpListener(address, port);
             _serverSocket.Start();
             _moduleLister.MessageForListener("serveur démarré");
-            
+
             // démarre le thread qui attend que les clients se connectent
             Thread thread = new Thread(WaitForAClient);
             thread.Name = "écoute les connection";
@@ -42,19 +43,24 @@ namespace CommonConnection
 
         public void WaitForAClient()
         {
+            _waitingForClient = true;
+
             try
             {
                 TcpClient newClient = _serverSocket.AcceptTcpClient();
                 _moduleLister.MessageForListener("nouveau client");
 
-                new Thread(() => WaitForClientRequest(newClient)).Start();
+                Thread listenerClientRequests = new Thread(() => WaitForClientRequest(newClient));
+                listenerClientRequests.Start();
+                _listOfClientsThread.Add(listenerClientRequests);
             }
             catch(SocketException exception)
             {
                 // le serveur arrête l'écoute
                 _moduleLister.MessageForListener("le serveur n'accepte plus de nouvaux clients");
             }
-            
+
+            _waitingForClient = false;
         }
 
         private void WaitForClientRequest(TcpClient newClient)
@@ -99,8 +105,17 @@ namespace CommonConnection
 
         public void StopModule()
         {
+            if (_waitingForClient)
+            {
+                _serverSocket.Stop();
+            }
+            _waitingForClient = false;
             _running = false;
-            _serverSocket.Stop();
+            
+            foreach (Thread thread in _listOfClientsThread)
+            {
+                thread.Abort();
+            }
         }
 
         public void SendMessageToListener(IServerListener listener, String message)
@@ -110,9 +125,9 @@ namespace CommonConnection
             listener.MessageForListener(message);
         }
 
-        public bool isRunning()
+        public bool IsRunning()
         {
-            return _running;
+            return _waitingForClient;
         }
     }
 }
