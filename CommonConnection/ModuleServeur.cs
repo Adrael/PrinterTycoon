@@ -109,5 +109,10 @@ namespace CommonConnection
             Console.WriteLine(listener.ToString());
             listener.MessageForListener(message);
         }
+
+        public bool isRunning()
+        {
+            return _running;
+        }
     }
 }
