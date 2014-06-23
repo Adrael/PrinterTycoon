@@ -99,7 +99,7 @@ namespace Server
 
         public byte[] ProcessDataFromClient(byte[] dataFromClient, int dataSize)
         {
-            throw new NotImplementedException();
+            return dataFromClient;
         }
 
         public void MessageForListener(string dataFromClient)
