@@ -131,12 +131,12 @@ namespace ClientWindow
 
         private void progressPrinting()
         {
-            processAction("progress", false);
+            processAction("progress", true);
         }
 
         private void cancelPrinting()
         {
-            processAction("cancel", false);
+            processAction("cancel", true);
         }
 
         private void processAction(String action, bool byIDOrSize)
@@ -212,18 +212,11 @@ namespace ClientWindow
             // affect id to file
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             Console.WriteLine("closing");
             closeAllThreads();
         }
-
-
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
