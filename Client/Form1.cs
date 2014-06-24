@@ -87,7 +87,8 @@ namespace ClientWindow
         {
             foreach (var thread in threads)
             {
-                thread.Abort();
+                thread.Join();
+//                thread.Abort();
             }
 
             Console.WriteLine("Closed threads");
@@ -173,6 +174,7 @@ namespace ClientWindow
             Console.WriteLine("Creating thread " + name);
             var thread = new Thread(function) { Name = name };
             threads.Add(thread);
+            thread.IsBackground = false;
             thread.Start();
         }
 
@@ -208,6 +210,7 @@ namespace ClientWindow
             for (var i = 1; i < split.Length; ++i)
             {
                 var value = split[i].Split('=');
+                Console.WriteLine("value = " + value);
 
                 foreach (ListViewItem item in filesList.Items)
                 {
@@ -221,6 +224,7 @@ namespace ClientWindow
 
                     else if (action == "print")
                     {
+                        Console.WriteLine("value = " + value);
                         if (setUpId(item, value[0], value[1]))
                         {
                             break;
